@@ -159,9 +159,9 @@ vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
 -- Create empty pane at bottom right for R plots
-vim.g.R_after_start = { ':winc j', ':vsplit', ':vertical resize ' .. math.floor(vim.fn.winwidth(0) / 3), ':winc k' }
+-- vim.g.R_after_start = { ':winc j', ':vsplit', ':vertical resize ' .. math.floor(vim.fn.winwidth(0) / 3), ':winc k' }
 -- Place object browser above plot plane
-vim.g.R_objbr_place = 'script,right'
+-- vim.g.R_objbr_place = 'script,right'
 
 -- NOTE: Here is where you install your plugins.
 require('lazy').setup({
@@ -405,42 +405,13 @@ require('lazy').setup({
       'hrsh7th/cmp-nvim-lsp',
     },
     config = function()
-      -- Brief aside: **What is LSP?**
-      --
-      -- LSP is an initialism you've probably heard, but might not understand what it is.
-      --
-      -- LSP stands for Language Server Protocol. It's a protocol that helps editors
-      -- and language tooling communicate in a standardized fashion.
-      --
-      -- In general, you have a "server" which is some tool built to understand a particular
-      -- language (such as `gopls`, `lua_ls`, `rust_analyzer`, etc.). These Language Servers
-      -- (sometimes called LSP servers, but that's kind of like ATM Machine) are standalone
-      -- processes that communicate with some "client" - in this case, Neovim!
-      --
-      -- LSP provides Neovim with features like:
-      --  - Go to definition
-      --  - Find references
-      --  - Autocompletion
-      --  - Symbol Search
-      --  - and more!
-      --
-      -- Thus, Language Servers are external tools that must be installed separately from
-      -- Neovim. This is where `mason` and related plugins come into play.
-      --
-      -- If you're wondering about lsp vs treesitter, you can check out the wonderfully
-      -- and elegantly composed help section, `:help lsp-vs-treesitter`
-
-      --  This function gets run when an LSP attaches to a particular buffer.
-      --    That is to say, every time a new file is opened that is associated with
-      --    an lsp (for example, opening `main.rs` is associated with `rust_analyzer`) this
-      --    function will be executed to configure the current buffer
       vim.api.nvim_create_autocmd('LspAttach', {
         group = vim.api.nvim_create_augroup('kickstart-lsp-attach', { clear = true }),
         callback = function(event)
           -- NOTE: Remember that Lua is a real programming language, and as such it is possible
           -- to define small helper and utility functions so you don't have to repeat yourself.
           --
-          -- In this case, we create a function that lets us more easily define mappings specific
+          -- In this case, we create a func that lets us more easily define mappings specific
           -- for LSP related items. It sets the mode, buffer and description for us each time.
           local map = function(keys, func, desc, mode)
             mode = mode or 'n'
@@ -448,7 +419,7 @@ require('lazy').setup({
           end
 
           -- Jump to the definition of the word under your cursor.
-          --  This is where a variable was first declared, or where a function is defined, etc.
+          --  This is where a variable was first declared, or where a func is defined, etc.
           --  To jump back, press <C-t>.
           map('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
 
@@ -543,6 +514,10 @@ require('lazy').setup({
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
         clangd = {},
+        -- gdtoolkit = {
+        --   cmd = { 'godot', '--lsp', '--port', '6005', '--host', '127.0.1.1' },
+        --   -- on_attach = function(client, bufn) end,
+        -- },
         -- gopls = {},
         pyright = {},
         rust_analyzer = {},
@@ -636,6 +611,7 @@ require('lazy').setup({
       end,
       formatters_by_ft = {
         lua = { 'stylua' },
+        markdown = { 'prettier' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
