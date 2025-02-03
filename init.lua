@@ -28,6 +28,20 @@ vim.opt.showmode = false
 --  Schedule the setting after `UiEnter` because it can increase startup-time.
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
+
+vim.g.clipboard = {
+  name = 'WslClipboard',
+  copy = {
+    ['+'] = 'clip.exe',
+    ['*'] = 'clip.exe',
+  },
+  paste = {
+    ['+'] = 'powershell.exe =c [Console]::Out.Write($Get-Clipboard -Raw).tostring().replace("`r", ""))',
+    ['*'] = 'powershell.exe =c [Console]::Out.Write($Get-Clipboard -Raw).tostring().replace("`r", ""))',
+  },
+  cache_enabled = 0,
+}
+
 vim.schedule(function()
   vim.opt.clipboard = 'unnamedplus'
 end)
@@ -746,7 +760,20 @@ require('lazy').setup({
       }
     end,
   },
-
+  -- Diagnostics
+  {
+    'tweekmonster/startuptime.vim',
+  },
+  -- Colorschemes
+  {
+    'vague2k/vague.nvim',
+    lazy = false,
+    priority = 1000,
+    config = function()
+      vim.cmd.colorscheme 'vague'
+    end,
+  },
+  { 'catppuccin/nvim', name = 'catppuccin', priority = 1000 },
   { -- You can easily change to a different colorscheme.
     -- Change the name of the colorscheme plugin below, and then
     -- change the command in the config to whatever the name of that colorscheme is.
@@ -762,6 +789,25 @@ require('lazy').setup({
 
       -- You can configure highlights by doing something like:
       vim.cmd.hi 'Comment gui=none'
+    end,
+  },
+  -- Themery: colorscheme switching
+  {
+    'zaldih/themery.nvim',
+    config = function()
+      local installed_colorschemes = vim.fn.getcompletion('', 'color')
+      require('themery').setup {
+        themes = {
+          'catppuccin',
+          'catppuccin-frappe',
+          'catppuccin-latte',
+          'catppuccin-macchiato',
+          'catppuccin-mocha',
+          'tokyonight-night',
+          'vague',
+        },
+        livePreview = true,
+      }
     end,
   },
 
