@@ -18,6 +18,13 @@ vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.statuscolumn = '%l %r %s' -- absolute & relative line numbers
 
+-- Rendering
+vim.opt.ttyfast = true
+vim.opt.lazyredraw = true
+
+-- Line rules
+vim.opt.colorcolumn = '80,120'
+
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = 'a'
 
@@ -74,7 +81,8 @@ vim.opt.splitbelow = true
 --  See `:help 'list'`
 --  and `:help 'listchars'`
 vim.opt.list = true
-vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
+-- vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
+vim.opt.listchars = { tab = '·┈', trail = '￮', multispace = '￮', lead = ' ', extends = '▶', precedes = '◀', nbsp = '‿' }
 
 -- Preview substitutions live, as you type!
 vim.opt.inccommand = 'split'
@@ -388,6 +396,10 @@ require('lazy').setup({
     },
   },
   { 'Bilal2453/luvit-meta', lazy = true },
+  -- LaTeX
+  {
+    'lervag/vimtex',
+  },
   {
     -- Main LSP Configuration
     'neovim/nvim-lspconfig',
@@ -445,7 +457,7 @@ require('lazy').setup({
 
           -- Rename the variable under your cursor.
           --  Most Language Servers support renaming across files, etc.
-          map('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
+          map('<leader>rw', vim.lsp.buf.rename, '[R]ename [w]ord')
 
           -- Execute a code action, usually your cursor needs to be on top of an error
           -- or a suggestion from your LSP for this to activate.
@@ -519,7 +531,8 @@ require('lazy').setup({
         --   -- on_attach = function(client, bufn) end,
         -- },
         -- gopls = {},
-        pyright = {},
+        -- pyright = {},
+        ruff = {},
         rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -694,8 +707,8 @@ require('lazy').setup({
           -- If you prefer more traditional completion keymaps,
           -- you can uncomment the following lines
           ['<S-Tab>'] = cmp.mapping.confirm { select = true },
-          ['<C-Down>'] = cmp.mapping.select_next_item(),
-          ['<C-Up>'] = cmp.mapping.select_prev_item(),
+          ['<C-j>'] = cmp.mapping.select_next_item(),
+          ['<C-k>'] = cmp.mapping.select_prev_item(),
 
           -- Manually trigger a completion from nvim-cmp.
           --  Generally you don't need this, because nvim-cmp will display
@@ -889,7 +902,7 @@ require('lazy').setup({
       auto_install = true,
       highlight = {
         enable = true,
-        disable = { 'csv' },
+        disable = { 'csv', 'latex' },
         -- Some languages depend on vim's regex highlighting system (such as Ruby) for indent rules.
         --  If you are experiencing weird indenting issues, add the language to
         --  the list of additional_vim_regex_highlighting and disabled languages for indent.
@@ -975,7 +988,68 @@ require('lazy').setup({
     'kristijanhusak/vim-dadbod-ui',
   },
   -- R plugins
-  { 'jalvesaq/Nvim-R' },
+  -- { 'jalvesaq/Nvim-R' },
+  -- {
+  --   'R-nvim/R.nvim',
+  --   config = function()
+  --     -- Create a table with the options to be passed to setup()
+  --     local opts = {
+  --       R_args = { '--quiet', '--no-save' },
+  --       hook = {
+  --         on_filetype = function()
+  --           -- This function will be called at the FileType event
+  --           -- of files supported by R.nvim. This is an
+  --           -- opportunity to create mappings local to buffers.
+  --           vim.api.nvim_buf_set_keymap(0, 'n', '<Enter>', '<Plug>RDSendLine', {})
+  --           vim.api.nvim_buf_set_keymap(0, 'v', '<Enter>', '<Plug>RSendSelection', {})
+  --
+  --           -- Increase the width of which-key to handle the r-nvim descriptions
+  --           local wk = require 'which-key'
+  --           wk.setup {
+  --             layout = {
+  --               width = { min = 20, max = 100 }, -- min and max width of the columns
+  --             },
+  --           }
+  --           -- Workaround from https://github.com/folke/which-key.nvim/issues/514#issuecomment-1987286901
+  --           wk.register {
+  --             ['<localleader>'] = {
+  --               a = { name = '+(a)ll', ['🚫'] = 'which_key_ignore' },
+  --               b = { name = '+(b)etween marks', ['🚫'] = 'which_key_ignore' },
+  --               c = { name = '+(c)hunks', ['🚫'] = 'which_key_ignore' },
+  --               f = { name = '+(f)unctions', ['🚫'] = 'which_key_ignore' },
+  --               g = { name = '+(g)oto', ['🚫'] = 'which_key_ignore' },
+  --               k = { name = '+(k)nit', ['🚫'] = 'which_key_ignore' },
+  --               p = { name = '+(p)aragraph', ['🚫'] = 'which_key_ignore' },
+  --               r = { name = '+(r) general', ['🚫'] = 'which_key_ignore' },
+  --               s = { name = '+(s)plit or (s)end', ['🚫'] = 'which_key_ignore' },
+  --               t = { name = '+(t)erminal', ['🚫'] = 'which_key_ignore' },
+  --               v = { name = '+(v)iew', ['🚫'] = 'which_key_ignore' },
+  --             },
+  --           }
+  --         end,
+  --       },
+  --       min_editor_width = 72,
+  --       rconsole_width = 78,
+  --       disable_cmds = {
+  --         'RClearConsole',
+  --         'RCustomStart',
+  --         'RSPlot',
+  --         'RSaveClose',
+  --       },
+  --       synctex = false,
+  --       pdfviewer = 'open',
+  --     }
+  --     -- Check if the environment variable "R_AUTO_START" exists.
+  --     -- If using fish shell, you could put in your config.fish:
+  --     -- alias r "R_AUTO_START=true nvim"
+  --     if vim.env.R_AUTO_START == 'true' then
+  --       opts.auto_start = 'on startup'
+  --       opts.objbr_auto_start = true
+  --     end
+  --     require('r').setup(opts)
+  --   end,
+  --   lazy = false,
+  -- },
   -- Neotree with the <leader>ee explorer keybind
   {
     'nvim-neo-tree/neo-tree.nvim',
