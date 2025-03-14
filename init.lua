@@ -754,32 +754,32 @@ require('lazy').setup({
     'tweekmonster/startuptime.vim',
   },
   -- Colorschemes
-  {
-    'vague2k/vague.nvim',
-    lazy = false,
-    priority = 1000,
-    config = function()
-      vim.cmd.colorscheme 'vague'
-    end,
-  },
+  -- {
+  --   'vague2k/vague.nvim',
+  --   lazy = false,
+  --   priority = 1000,
+  --   config = function()
+  --     vim.cmd.colorscheme 'vague'
+  --   end,
+  -- },
   { 'catppuccin/nvim', name = 'catppuccin', priority = 1000 },
-  { -- You can easily change to a different colorscheme.
-    -- Change the name of the colorscheme plugin below, and then
-    -- change the command in the config to whatever the name of that colorscheme is.
-    --
-    -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-    'folke/tokyonight.nvim',
-    priority = 1000, -- Make sure to load this before all the other start plugins.
-    init = function()
-      -- Load the colorscheme here.
-      -- Like many other themes, this one has different styles, and you could load
-      -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'tokyonight-night'
-
-      -- You can configure highlights by doing something like:
-      vim.cmd.hi 'Comment gui=none'
-    end,
-  },
+  -- { -- You can easily change to a different colorscheme.
+  --   -- Change the name of the colorscheme plugin below, and then
+  --   -- change the command in the config to whatever the name of that colorscheme is.
+  --   --
+  --   -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
+  --   'folke/tokyonight.nvim',
+  --   priority = 1000, -- Make sure to load this before all the other start plugins.
+  --   init = function()
+  --     -- Load the colorscheme here.
+  --     -- Like many other themes, this one has different styles, and you could load
+  --     -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
+  --     vim.cmd.colorscheme 'tokyonight-night'
+  --
+  --     -- You can configure highlights by doing something like:
+  --     vim.cmd.hi 'Comment gui=none'
+  --   end,
+  -- },
   -- Themery: colorscheme switching
   {
     'zaldih/themery.nvim',
@@ -792,8 +792,8 @@ require('lazy').setup({
           'catppuccin-latte',
           'catppuccin-macchiato',
           'catppuccin-mocha',
-          'tokyonight-night',
-          'vague',
+          -- 'tokyonight-night',
+          -- 'vague',
         },
         livePreview = true,
       }
@@ -836,57 +836,6 @@ require('lazy').setup({
         return '%2l:%-2v'
       end
 
-      -- Minimap
-      local map = require 'mini.map'
-      map.setup {
-        -- No need to copy this inside `setup()`. Will be used automatically.
-        -- Highlight integrations (none by default)
-        integrations = {
-          map.gen_integration.builtin_search(),
-          map.gen_integration.diff(),
-          map.gen_integration.diagnostic(),
-        },
-
-        -- Symbols used to display data
-        symbols = {
-          -- Encode symbols. See `:h MiniMap.config` for specification and
-          -- `:h MiniMap.gen_encode_symbols` for pre-built ones.
-          -- Default: solid blocks with 3x2 resolution.
-          encode = nil,
-
-          -- Scrollbar parts for view and line. Use empty string to disable any.
-          scroll_line = '▶',
-          scroll_view = '┃',
-        },
-
-        -- Window options
-        window = {
-          -- Whether window is focusable in normal way (with `wincmd` or mouse)
-          focusable = false,
-
-          -- Side to stick ('left' or 'right')
-          side = 'right',
-
-          -- Whether to show count of multiple integration highlights
-          show_integration_count = true,
-
-          -- Total width
-          width = 10,
-
-          -- Value of 'winblend' option
-          winblend = 25,
-
-          -- Z-index
-          zindex = 10,
-        },
-      }
-
-      vim.keymap.set('n', '<leader>mc', MiniMap.close, { desc = 'Minimap [c]lose' })
-      vim.keymap.set('n', '<leader>mf', MiniMap.toggle_focus, { desc = 'Minimap toggle [f]ocus' })
-      vim.keymap.set('n', '<leader>mo', MiniMap.open, { desc = 'Minimap [o]pen' })
-      vim.keymap.set('n', '<leader>mr', MiniMap.refresh, { desc = 'Minimap [r]efresh' })
-      vim.keymap.set('n', '<leader>ms', MiniMap.toggle_side, { desc = 'Minimap toggle [s]ide' })
-      vim.keymap.set('n', '<leader>mm', MiniMap.toggle, { desc = 'Mini[m]ap toggle' })
       -- ... and there is more!
       --  Check out: https://github.com/echasnovski/mini.nvim
     end,
@@ -988,68 +937,60 @@ require('lazy').setup({
     'kristijanhusak/vim-dadbod-ui',
   },
   -- R plugins
-  -- { 'jalvesaq/Nvim-R' },
-  -- {
-  --   'R-nvim/R.nvim',
-  --   config = function()
-  --     -- Create a table with the options to be passed to setup()
-  --     local opts = {
-  --       R_args = { '--quiet', '--no-save' },
-  --       hook = {
-  --         on_filetype = function()
-  --           -- This function will be called at the FileType event
-  --           -- of files supported by R.nvim. This is an
-  --           -- opportunity to create mappings local to buffers.
-  --           vim.api.nvim_buf_set_keymap(0, 'n', '<Enter>', '<Plug>RDSendLine', {})
-  --           vim.api.nvim_buf_set_keymap(0, 'v', '<Enter>', '<Plug>RSendSelection', {})
-  --
-  --           -- Increase the width of which-key to handle the r-nvim descriptions
-  --           local wk = require 'which-key'
-  --           wk.setup {
-  --             layout = {
-  --               width = { min = 20, max = 100 }, -- min and max width of the columns
-  --             },
-  --           }
-  --           -- Workaround from https://github.com/folke/which-key.nvim/issues/514#issuecomment-1987286901
-  --           wk.register {
-  --             ['<localleader>'] = {
-  --               a = { name = '+(a)ll', ['🚫'] = 'which_key_ignore' },
-  --               b = { name = '+(b)etween marks', ['🚫'] = 'which_key_ignore' },
-  --               c = { name = '+(c)hunks', ['🚫'] = 'which_key_ignore' },
-  --               f = { name = '+(f)unctions', ['🚫'] = 'which_key_ignore' },
-  --               g = { name = '+(g)oto', ['🚫'] = 'which_key_ignore' },
-  --               k = { name = '+(k)nit', ['🚫'] = 'which_key_ignore' },
-  --               p = { name = '+(p)aragraph', ['🚫'] = 'which_key_ignore' },
-  --               r = { name = '+(r) general', ['🚫'] = 'which_key_ignore' },
-  --               s = { name = '+(s)plit or (s)end', ['🚫'] = 'which_key_ignore' },
-  --               t = { name = '+(t)erminal', ['🚫'] = 'which_key_ignore' },
-  --               v = { name = '+(v)iew', ['🚫'] = 'which_key_ignore' },
-  --             },
-  --           }
-  --         end,
-  --       },
-  --       min_editor_width = 72,
-  --       rconsole_width = 78,
-  --       disable_cmds = {
-  --         'RClearConsole',
-  --         'RCustomStart',
-  --         'RSPlot',
-  --         'RSaveClose',
-  --       },
-  --       synctex = false,
-  --       pdfviewer = 'open',
-  --     }
-  --     -- Check if the environment variable "R_AUTO_START" exists.
-  --     -- If using fish shell, you could put in your config.fish:
-  --     -- alias r "R_AUTO_START=true nvim"
-  --     if vim.env.R_AUTO_START == 'true' then
-  --       opts.auto_start = 'on startup'
-  --       opts.objbr_auto_start = true
-  --     end
-  --     require('r').setup(opts)
-  --   end,
-  --   lazy = false,
-  -- },
+  {
+    'R-nvim/R.nvim',
+    'R-nvim/cmp-r',
+    {
+      'nvim-treesitter/nvim-treesitter',
+      run = ':TSUpdate',
+      config = function()
+        require('nvim-treesitter.configs').setup {
+          sync_install = true,
+          ensure_installed = {
+            'r',
+            'markdown',
+            'markdown_inline',
+            'rnoweb',
+            'yaml',
+          },
+          highlight = {
+            enable = true,
+          },
+        }
+      end,
+    },
+
+    {
+      'hrsh7th/nvim-cmp',
+      config = function()
+        local cmp = require 'cmp'
+        cmp.setup {
+          sources = { { name = 'cmp_r' }, { name = 'nvim_lsp' } },
+          mapping = cmp.mapping.preset.insert {
+            ['<CR>'] = cmp.mapping.confirm { select = false },
+            -- During auto-completion, press <Tab> to select the next item.
+            ['<Tab>'] = cmp.mapping(function(fallback)
+              if cmp.visible() then
+                cmp.select_next_item { behavior = cmp.SelectBehavior.Insert }
+              elseif has_words_before() then
+                cmp.complete()
+              else
+                fallback()
+              end
+            end, { 'i', 's' }),
+            ['<S-Tab>'] = cmp.mapping(function(fallback)
+              if cmp.visible() then
+                cmp.select_prev_item { behavior = cmp.SelectBehavior.Insert }
+              else
+                fallback()
+              end
+            end, { 'i', 's' }),
+          },
+        }
+        require('cmp_r').setup {}
+      end,
+    },
+  },
   -- Neotree with the <leader>ee explorer keybind
   {
     'nvim-neo-tree/neo-tree.nvim',
